@@ -1,0 +1,14 @@
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Any other generic ignores
+node_modules/
+dist/
+build/

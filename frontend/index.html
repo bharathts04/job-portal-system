@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobHub - Find Your Dream Job</title>
+    <meta name="description" content="A premium job portal system bridging the gap between job seekers and recruiters.">
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <a href="index.html" class="nav-brand">
+                <i class="fa-solid fa-briefcase"></i> JobHub
+            </a>
+            <div class="nav-links" id="navLinks">
+                <a href="index.html">Find Jobs</a>
+                <a href="#">Companies</a>
+                <a href="#" id="loginBtn" class="btn btn-outline" onclick="window.location.href='pages/login.html'">Log In</a>
+                <a href="#" id="signupBtn" class="btn btn-primary" onclick="window.location.href='pages/signup.html'">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Find your next dream job today</h1>
+                <p>Discover thousands of job opportunities with top companies around the world. Your next big career move starts here.</p>
+                
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Job title, keywords, or company...">
+                    <button class="btn btn-primary" onclick="searchJobs()">
+                        <i class="fa-solid fa-search"></i> Search
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Jobs Section -->
+    <section class="jobs-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Latest Job Openings</h2>
+                <p style="color: var(--text-secondary);">Explore the most recent opportunities</p>
+            </div>
+            
+            <div class="jobs-grid" id="jobsContainer">
+                <!-- Jobs will be populated here by JavaScript -->
+                <div style="text-align: center; width: 100%; grid-column: 1 / -1; padding: 3rem; color: var(--text-secondary);">
+                    <i class="fa-solid fa-spinner fa-spin fa-2x"></i>
+                    <p style="margin-top: 1rem;">Loading latest jobs...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <i class="fa-solid fa-circle-info" id="toastIcon"></i>
+        <span id="toastMsg">Notification message</span>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/app.js"></script>
+    <script>
+        // On page load, fetch jobs
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchJobs();
+            updateAuthUI();
+            
+            // Navbar scroll effect
+            window.addEventListener('scroll', () => {
+                const nav = document.getElementById('navbar');
+                if (window.scrollY > 50) {
+                    nav.style.boxShadow = 'var(--shadow-sm)';
+                } else {
+                    nav.style.boxShadow = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

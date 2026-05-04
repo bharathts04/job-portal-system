@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log In - JobHub</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body style="background-image: url('../assets/hero_bg.png'); background-size: cover; background-position: center;">
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <a href="../index.html" class="nav-brand">
+                <i class="fa-solid fa-briefcase"></i> JobHub
+            </a>
+            <div class="nav-links">
+                <a href="../index.html">Home</a>
+                <a href="signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="auth-container glass-panel">
+            <h2 style="text-align: center; margin-bottom: 2rem;">Welcome Back</h2>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label" for="username">Username</label>
+                    <input type="text" id="username" class="form-control" required placeholder="Enter your username">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input type="password" id="password" class="form-control" required placeholder="Enter your password">
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+                    Log In
+                </button>
+            </form>
+            
+            <p style="text-align: center; margin-top: 1.5rem; color: var(--text-secondary);">
+                Don't have an account? <a href="signup.html">Sign up</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <i class="fa-solid fa-circle-info" id="toastIcon"></i>
+        <span id="toastMsg">Notification</span>
+    </div>
+
+    <script src="../js/app.js"></script>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerHTML;
+            
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Logging in...';
+            btn.disabled = true;
+
+            try {
+                const response = await fetch(`${API_URL}/auth/signin`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    localStorage.setItem('token', data.accessToken);
+                    localStorage.setItem('user', JSON.stringify({
+                        id: data.id,
+                        username: data.username,
+                        email: data.email,
+                        role: data.role
+                    }));
+                    
+                    showToast('Login successful!', 'success');
+                    
+                    setTimeout(() => {
+                        if (data.role === 'ROLE_RECRUITER') {
+                            window.location.href = 'dashboard-recruiter.html';
+                        } else {
+                            window.location.href = '../index.html';
+                        }
+                    }, 1000);
+                } else {
+                    const error = await response.json();
+                    showToast(error.message || 'Invalid credentials', 'error');
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('Server error. Please try again later.', 'error');
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
